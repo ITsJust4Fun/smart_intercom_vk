@@ -43,9 +43,18 @@ if __name__ == '__main__':
         if settings['is_registration_mode']:
             bot.processRegistration(50)
         else:
-            N = 8
-            plugin = Plugin('test', 'http://localhost:8080/plugin/')
-            plugin.getEvent()
-            # bot.incomingCall()
-            # peer_id = bot.processAnswer(50, 'C:/Users/Artyom/Downloads/output.mp4')
-            # bot.processOpen(50, peer_id)
+            plugin = Plugin('vk_bot', 'http://localhost:8080/plugin/')
+            for event in plugin.listenEvents():
+                if 'message' in event:
+                    if event['message'] == 'incoming':
+                        bot.incomingCall()
+                        peer_id = bot.processAnswer(60, 'C:/Users/Artyom/Downloads/output.mp4')
+                        if peer_id != 0:
+                            plugin.answer()
+                            isOpen = bot.processOpen(60, peer_id)
+                            if isOpen:
+                                plugin.open()
+                            else:
+                                plugin.reject()
+                        else:
+                            plugin.cancel()

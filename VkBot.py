@@ -201,35 +201,3 @@ class VkBot:
                                                   'Отклонено!')
                     return False
         return False
-
-    def processMessages(self, duration):
-        for event in self.listen(duration):
-            if isinstance(event, list):
-                continue
-            if event.type == VkBotEventType.MESSAGE_NEW:
-                if event.obj.message['text'] != '' and event.from_user:
-                    self.registerUser(event)
-                    self.incomingCall(event)
-
-            elif event.type == VkBotEventType.MESSAGE_EVENT:
-                if event.object.payload.get('type') == 'answer':
-                    self.sendVideo(event.obj.peer_id,
-                                   event.obj.conversation_message_id,
-                                   'C:/Users/Artyom/Downloads/output.mp4')
-
-                elif event.object.payload.get('type') == 'reject':
-                    self.vk.messages.edit(
-                        peer_id=event.obj.peer_id,
-                        message='Отклонено',
-                        conversation_message_id=event.obj.conversation_message_id,
-                    )
-
-                elif event.object.payload.get('type') == 'open':
-                    self.editMessageWithVideoText(event.obj.peer_id,
-                                                  event.obj.conversation_message_id,
-                                                  'Открыто!')
-
-                elif event.object.payload.get('type') == 'close':
-                    self.editMessageWithVideoText(event.obj.peer_id,
-                                                  event.obj.conversation_message_id,
-                                                  'Отклонено!')
